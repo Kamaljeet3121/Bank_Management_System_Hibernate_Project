@@ -1,12 +1,12 @@
 package classProject;
 
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -24,7 +24,8 @@ public class Loan {
 	@JoinColumn
 	private Branch branch;
 	
-	@OneToOne		//4.
+	@ManyToOne
+	@JoinColumn 		//4.
 	private Customer customer;
 
 	public int getId() {
@@ -71,6 +72,10 @@ public class Loan {
 	public String toString() {
 		return "Loan [id=" + id + ", loanType=" + loanType + ", amount=" + amount + "]";
 	}
+
+	
+
+	
 	
 	
 

@@ -21,11 +21,8 @@ public class BankCrud {
 		
 		Bank b1 = new Bank();
 		System.out.println("Enter Bank Name");
-		b1.setName(sc.next());
-		System.out.println("Enter Bank Code");
-		b1.setCode(sc.nextInt());
+		b1.setName(sc.nextLine());
 		System.out.println("Enter Address");
-		sc.nextLine();
 		b1.setAddress(sc.nextLine());
 		
 		et.begin();
@@ -42,33 +39,17 @@ public class BankCrud {
 		Bank b = entityManager.find(Bank.class, sc.nextInt());
 		if(b!=null) {
 			System.out.println("Enter New Bank Name");
-			b.setName(sc.next());
+			sc.nextLine();
+			b.setName(sc.nextLine());
 			et.begin();
 			entityManager.merge(b);
 			et.commit();
 			System.out.println("-->Branch Name Updated<--");
 		}else {
-			System.out.println("Bank not found.\nPlease Enter valid Bank Id");
+			System.out.println("Bank not found.\nPlease Enter valid Bank Id\n");
 			updateBankName();
 			}
 		
-	}
-	public static void updateBankCode() {
-		
-		System.out.println("Enter the BankId");
-		
-		Bank b = entityManager.find(Bank.class, sc.nextInt());
-		if(b!=null) {
-			System.out.println("Enter New Bank Code");
-			b.setCode(sc.nextInt());
-			et.begin();
-			entityManager.merge(b);
-			et.commit();
-			System.out.println("-->Code Updated<--");
-		}else{
-			System.out.println("Bank not found.\nPlease Enter valid Bank Id");
-			updateBankCode();
-			}
 	}
 	
 	public static void updateBankAddress() {
@@ -78,13 +59,14 @@ public class BankCrud {
 		Bank b = entityManager.find(Bank.class, sc.nextInt());
 		if(b!=null) {
 			System.out.println("Enter New Address");
-			b.setName(sc.nextLine());
+			sc.nextLine();
+			b.setAddress(sc.nextLine());
 			et.begin();
 			entityManager.merge(b);
 			et.commit();
 			System.out.println("-->Address Updated<--");
 		}else{
-			System.out.println("Bank not found.\nPlease Enter valid Bank Id");
+			System.out.println("Bank not found.\nPlease Enter valid Bank Id\n");
 			updateBankAddress();
 			}
 	}
@@ -95,17 +77,14 @@ public class BankCrud {
 		
 		Bank b = entityManager.find(Bank.class, sc.nextInt());
 		if(b!=null) {
-			for(Branch branches:b.getBranches())
-				branches.setBank(null);
 			et.begin();
-			entityManager.merge(b);
-			et.commit();
-			et.begin();
+			for(Branch branch:b.getBranches())
+				branch.setBank(null);
 			entityManager.remove(b);
 			et.commit();
 			System.out.println("-->Bank Deleted<--");
 		}else {
-			System.out.println("Bank not found.\nPlease Enter valid Bank Id");
+			System.out.println("Bank not found.\nPlease Enter valid Bank Id\n");
 			removeBank();
 			}
 	}
@@ -113,7 +92,7 @@ public class BankCrud {
 	
 	public static void fetchAllBank() {
 		
-		String query = "select b from Bank b";
+		String query = "select b from Bank b order by id";
 		Query q = entityManager.createQuery(query);
 		
 		List<Bank> banks = q.getResultList();

@@ -18,7 +18,6 @@ public class Bank {
 	@GeneratedValue(strategy = GenerationType.AUTO,generator = "banks_SEQ")
 	@SequenceGenerator(initialValue = 1,allocationSize = 1,name = "banks_SEQ")
 	private int id;
-	private int code;
 	private String name;
 	private String address;
 	
@@ -31,14 +30,6 @@ public class Bank {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getCode() {
-		return code;
-	}
-
-	public void setCode(int code) {
-		this.code = code;
 	}
 
 	public String getName() {
@@ -67,7 +58,7 @@ public class Bank {
 
 	@Override
 	public String toString() {
-		return "Bank [id=" + id + ", code=" + code + ", name=" + name + ", address=" + address + "]";
+		return "Bank [id=" + id + ", name=" + name + ", address=" + address + "]";
 	}
 
 	

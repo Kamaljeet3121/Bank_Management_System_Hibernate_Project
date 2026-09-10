@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import classProject.Account;
 import classProject.Branch;
+import classProject.Customer;
+import classProject.Loan;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import util.Resources;
@@ -20,24 +22,40 @@ public class AccountCrud {
 		Branch branch = em.find(Branch.class, in.nextInt());
 		
 		if(branch!=null) {
-			Account acc = new Account();
-			acc.setBranch(branch);
-			System.out.println("Enter Account Type:");
-			acc.setAccType(in.next());
-			System.out.println("Enter Balance:");
-			acc.setBalance(in.nextInt());
+			createAccountstage2(branch);
 			
-			et.begin();
-			em.persist(acc);
-			et.commit();
-			
-			System.out.println("-->Account Created<--");
 		}else {
-			System.out.println("Branch Not Found..\nPlease Enter Valid Branch_ID:");
+			System.out.println("Branch Not Found..\nPlease Enter Valid Branch_ID:\n");
 			createAccount();
 		}
 		
 	}
+	
+	private static void createAccountstage2(Branch b) {
+		
+		System.out.println("Enter Customer ID to map:");
+		
+		Customer c = em.find(Customer.class, in.nextInt());
+		if(c!=null) {
+		et.begin();
+		Account acc = new Account();
+		acc.setBranch(b);
+		acc.setCustomer(c);
+		System.out.println("Enter Account Type:");
+		in.nextLine();
+		acc.setAccType(in.nextLine());
+		System.out.println("Enter Balance:");
+		acc.setBalance(in.nextInt());
+		
+		em.persist(acc);
+		et.commit();
+		System.out.println("-->Account Created<--");
+		}else {
+			System.out.println("Customer Id Not Found..\\nPlease Enter Valid Customer_ID:\n");
+			createAccountstage2(b);
+		}
+	}
+	
 	public static void updateAccountBalance() {
 		System.out.println("Enter the Account_No");
 		Account acc = em.find(Account.class, in.nextInt());
@@ -49,7 +67,7 @@ public class AccountCrud {
 			et.commit();
 			System.out.println("-->Balance Updated<--");
 		}else {
-			System.out.println("Account not found.\nPlease Enter valid Account_No");
+			System.out.println("Account not found.\nPlease Enter valid Account_No\n");
 			updateAccountBalance();
 			}
 	}
@@ -65,19 +83,30 @@ public class AccountCrud {
 			et.commit();
 			System.out.println("-->Account_Type Updated<--");
 		}else {
-			System.out.println("Account not found.\nPlease Enter valid Account_No");
+			System.out.println("Account not found.\nPlease Enter valid Account_No\n");
 			updateAccountType();
 		}
 	}
 	
 	public static void fetchAllAccount() {
-		String query = "select b from Account b";
+		String query = "select b from Account b order by id";
 		for(Account acc: (List<Account>)em.createQuery(query).getResultList()) {
 			System.out.println(acc);
 		}
 	}
 	public static void removeAccount() {
+		System.out.println("Enter the Account_Id");
 		
+		Account a = em.find(Account.class, in.nextInt());
+		if(a!=null) {
+			et.begin();
+			em.remove(a);
+			et.commit();
+			System.out.println("-->Account Deleted<--");
+		}else {
+			System.out.println("Account not found.\nPlease Enter valid Account_Id\n");
+			removeAccount();
+			}
 	}
 	
 }

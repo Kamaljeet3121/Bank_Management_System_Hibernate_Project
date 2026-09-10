@@ -3,8 +3,10 @@ package crud;
 import java.util.List;
 import java.util.Scanner;
 
+import classProject.Account;
 import classProject.Bank;
 import classProject.Branch;
+import classProject.Loan;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import util.Resources;
@@ -25,9 +27,9 @@ public class BranchCrud {
 			Branch b = new Branch();
 			b.setBank(bank);
 			System.out.println("Enter Branch Name:");
-			b.setName(in.next());
-			System.out.println("Enter Branch Address:");
-			in.next();
+			in.nextLine();
+			b.setName(in.nextLine());
+			System.out.println("Enter Branch Address:");		
 			b.setAddress(in.nextLine());
 			et.begin();
 			em.persist(b);
@@ -35,7 +37,7 @@ public class BranchCrud {
 			System.out.println("-->Branch Created<--");
 			
 		}else {
-			System.out.println("Bank not found.\nPlease Enter valid Bank Id");
+			System.out.println("Bank not found.\nPlease Enter valid Bank Id\n");
 			createBranch();
 			}
 	}
@@ -45,13 +47,14 @@ public class BranchCrud {
 		Branch b = em.find(Branch.class, in.nextInt());
 		if(b!=null) {
 			System.out.println("Enter New Branch Name");
-			b.setName(in.next());
+			in.nextLine();
+			b.setName(in.nextLine());
 			et.begin();
 			em.merge(b);
 			et.commit();
 			System.out.println("-->Branch Name Updated<--");
 		}else {
-			System.out.println("Bank not found.\nPlease Enter valid Branch Id");
+			System.out.println("Bank not found.\nPlease Enter valid Branch Id\n");
 			updateBranchName();
 			}
 	}
@@ -62,27 +65,43 @@ public class BranchCrud {
 		Branch b = em.find(Branch.class, in.nextInt());
 		if(b!=null) {
 			System.out.println("Enter New Branch Address");
-			in.next();
-			b.setName(in.nextLine());
+			in.nextLine();
+			b.setAddress(in.nextLine());
 			et.begin();
 			em.merge(b);
 			et.commit();
 			System.out.println("-->Branch Address Updated<--");
 		}else {
-			System.out.println("Bank not found.\nPlease Enter valid Branch Id");
+			System.out.println("Bank not found.\nPlease Enter valid Branch Id\n");
 			updateBranchName();
 			}
 	}
 	public static void fetchAllBranch() {
 		
-		String query = "select b from Branch b";
+		String query = "select b from Branch b order by id";
 		
 		for (Branch branch : (List<Branch>)em.createQuery(query).getResultList()) {
 			System.out.println(branch);
 		}
 	}
 	public static void removeBranch() {
+		System.out.println("Enter the Branch_Id");
 		
+		Branch b = em.find(Branch.class, in.nextInt());
+		if(b!=null) {
+			et.begin();
+			for(Account acc:b.getAccounts())
+				acc.setBranch(null);
+			for (Loan loan : b.getLoans()) {
+				loan.setBranch(null);
+			}
+			em.remove(b);
+			et.commit();
+			System.out.println("-->Branch Deleted<--");
+		}else {
+			System.out.println("Branch not found.\nPlease Enter valid Branch Id\n");
+			removeBranch();
+			}
 	}
 	
 }

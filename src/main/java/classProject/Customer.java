@@ -6,8 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -22,8 +22,8 @@ public class Customer {
 	private long phoneNo;
 	private String address;
 	
-	@OneToOne		//4.
-	private Loan loans;
+	@OneToMany(mappedBy = "customer")//4.
+	private List<Loan> loans;
 	
 	@OneToMany(mappedBy = "customer")	//5.
 	private List<Account> accounts;
@@ -60,11 +60,11 @@ public class Customer {
 		this.address = address;
 	}
 
-	public Loan getLoans() {
+	public List<Loan> getLoans() {
 		return loans;
 	}
 
-	public void setLoans(Loan loans) {
+	public void setLoans(List<Loan> loans) {
 		this.loans = loans;
 	}
 
